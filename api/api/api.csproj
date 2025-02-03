@@ -9,7 +9,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
-		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0" />
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
+		<Folder Include="Rsa\" />
 
 		<Folder Include="Validators\" />
 	</ItemGroup>
@@ -21,13 +22,22 @@
   </ItemGroup>
 
 	<!-- SqlServer / MySql -->
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+
+		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
+	</ItemGroup>
+
 
 	<ItemGroup>
 		<Folder Include="Routes\" />
 		<Folder Include="Services\" />
 		<Folder Include="ModelsImport\" />
 		<Folder Include="ModelsExport\" />
-		<Folder Include="Rsa\" />
 	</ItemGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
