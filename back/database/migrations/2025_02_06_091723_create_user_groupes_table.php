@@ -15,7 +15,7 @@ return new class extends Migration
             $table->unsignedBigInteger("groupe_id");
             $table->unsignedBigInteger("user_id");
             $table->primary(["groupe_id", "user_id"]);
-            $table->boolean("user_is_quited")->nullable();
+            $table->boolean("user_is_quited");
         });
     }
 
