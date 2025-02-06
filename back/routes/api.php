@@ -20,10 +20,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+
+    Route::controller(MessageController::class)->prefix("message")->group(function()
+    {
+        Route::get("list/{groupeId}", "List")
+            ->whereNumber("groupeId");
+
+        Route::post("add", "Add");
+        Route::get("file", "Fichier");
+    });
 });
 
-Route::controller(MessageController::class)->prefix("message")->group(function()
-{
-    Route::get("list/{groupeId}", "List")
-        ->whereNumber("groupeId");
-});
