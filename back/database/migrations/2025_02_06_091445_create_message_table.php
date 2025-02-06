@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
             $table->foreignId("user_id")->constrained();
-            $table->foreignId("conversation_id")->constrained();
+            $table->foreignId("groupe_id")->constrained();
             $table->string("content", 1_500);
             $table->boolean("is_file")->default(0);
             $table->timestamps();
