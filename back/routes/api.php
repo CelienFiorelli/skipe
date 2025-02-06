@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\LikeController;
+use App\Http\Controllers\GroupeController;
 use App\Http\Controllers\MessageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +28,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         Route::post("add", "Add");
         Route::get("file", "Fichier");
+    });
+
+    Route::controller(GroupeController::class)->prefix("groupe")->group(function()
+    {
+        Route::get("list", "List");
     });
 });
 

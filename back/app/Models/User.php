@@ -17,7 +17,6 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $password
  * 
  * @property Message[] $messages
- * @property Groupe[] $groupes
  */
 class User extends Authenticatable
 {
@@ -44,8 +43,22 @@ class User extends Authenticatable
         return $this->hasMany(Message::class);
     }
 
-    public function groupes(): HasMany
+    /**
+     * @return Groupe[]
+     */
+    public function groupes()
     {
-        return $this->hasMany(Groupe::class);
+        return $this->join(
+            (new UserGroupe())->getTable()." as ug",
+            "ug.user_id",
+            "=",
+            "users.id"
+        )
+        ->where([
+            ["ug.user_id", $this->id],
+            ["user_is_quited", false]
+
+        ])
+        ->get();
     }
 }
