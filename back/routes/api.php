@@ -34,7 +34,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     {
         Route::get("list", "List");
         Route::post("add", "Add");
-        Route::delete("remove-member", "DeleteMember");
+        Route::post("add-member", "AddMember");
+        Route::delete("delete-member", "DeleteMember");
     });
 });
 
