@@ -14,13 +14,13 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MessageController extends Controller
 {
-    public function List(int $groupeId): JsonResponse
+    public function List(int $groupId): JsonResponse
     {
-        if($groupeId <= 0)
+        if($groupId <= 0)
             return response("groupe id not lower or equal to 0", 400);
 
         $list = Message::query()
-            ->where("groupe_id", $groupeId)
+            ->where("groupe_id", $groupId)
             ->get();
 
         return response()->json($list);
@@ -42,7 +42,7 @@ class MessageController extends Controller
 
         $info = [
             "user_id" => Auth::user()->id,
-            "groupe_id" => $messageRequest["groupe_id"]
+            "group_id" => $messageRequest["group_id"]
         ];
 
         $file = $_request->file("file");
@@ -50,7 +50,7 @@ class MessageController extends Controller
         if($file !== null)
         {
             $name = Carbon::now()->timestamp.rand(0, 100_000).".".$file->extension();
-            $path = "messageFile/".$messageRequest["groupe_id"];
+            $path = "messageFile/".$messageRequest["group_id"];
             Storage::putFileAs($path, $file, $name);
 
             $info["content"] = "$path/$name";

@@ -4,11 +4,11 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use App\Models\Groupe;
+use App\Models\Group;
 use App\Models\Image;
 use App\Models\Message;
 use App\Models\User;
-use App\Models\UserGroupe;
+use App\Models\UserGroup;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -33,30 +33,30 @@ class DatabaseSeeder extends Seeder
             "email_verified_at" => now()
         ]);
 
-        $groupe = Groupe::create([
+        $group = Group::create([
             "name" => "groupe 1"
         ]);
 
-        UserGroupe::created([
+        UserGroup::created([
             "user_id" => $user->id,
-            "groupe_id" => $groupe->id
+            "group_id" => $group->id
         ]);
 
-        UserGroupe::created([
+        UserGroup::created([
             "user_id" => $user2->id,
-            "groupe_id" => $groupe->id
+            "group_id" => $group->id
         ]);
 
         Message::create([
             "user_id" => $user->id,
-            "groupe_id" => $groupe->id,
+            "group_id" => $group->id,
             "content" => "salut",
             "is_file" => false
         ]);
 
         Message::create([
             "user_id" => $user2->id,
-            "groupe_id" => $groupe->id,
+            "group_id" => $group->id,
             "content" => "salut 2",
             "is_file" => false
         ]);

@@ -7,19 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property int $groupe_id
+ * @property int $group_id
  * @property int $user_id
  * 
  * @property bool $user_is_quited
  * 
- * @property Groupe $groupe
+ * @property Group $group
  * @property User $user
  */
-class UserGroupe extends Model
+class UserGroup extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = ["groupe_id", "user_id"];
+    protected $primaryKey = ["group_id", "user_id"];
 
     protected $casts = [
         "user_is_quited" => "boolean"
@@ -32,8 +32,8 @@ class UserGroupe extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function groupe(): BelongsTo
+    public function group(): BelongsTo
     {
-        return $this->belongsTo(Groupe::class);
+        return $this->belongsTo(Group::class);
     }
 }

@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_groupes', function (Blueprint $table) {
-            $table->unsignedBigInteger("groupe_id");
+        Schema::create('user_groups', function (Blueprint $table) {
+            $table->unsignedBigInteger("group_id");
             $table->unsignedBigInteger("user_id");
-            $table->primary(["groupe_id", "user_id"]);
+            $table->primary(["group_id", "user_id"]);
             $table->boolean("user_is_quited");
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_groupes');
+        Schema::dropIfExists('user_groups');
     }
 };

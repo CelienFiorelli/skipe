@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Message[] $messages
  * @property User[] $users
  */
-class Groupe extends Model
+class Group extends Model
 {
     use HasFactory;
 

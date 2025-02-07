@@ -9,21 +9,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property int $id
  * @property int $user_id
- * @property int $groupe_id
+ * @property int $group_id
  * @property string $content
  * @property bool $is_file
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * 
  * @property User $user
- * @property Groupe $groupe
+ * @property Group $group
  */
 class Message extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        "user_id", "groupe_id", "content", "is_file"
+        "user_id", "group_id", "content", "is_file"
     ];
 
     protected $casts = [
@@ -37,8 +37,8 @@ class Message extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function groupe(): BelongsTo
+    public function group(): BelongsTo
     {
-        return $this->belongsTo(Groupe::class);
+        return $this->belongsTo(Group::class);
     }
 }

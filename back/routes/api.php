@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\GroupeController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\MessageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,16 +23,18 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::controller(MessageController::class)->prefix("message")->group(function()
     {
-        Route::get("list/{groupeId}", "List")
-            ->whereNumber("groupeId");
+        Route::get("list/{groupId}", "List")
+            ->whereNumber("groupId");
 
         Route::post("add", "Add");
         Route::get("file", "Fichier");
     });
 
-    Route::controller(GroupeController::class)->prefix("groupe")->group(function()
+    Route::controller(GroupController::class)->prefix("group")->group(function()
     {
         Route::get("list", "List");
+        Route::post("add", "Add");
+        Route::delete("remove-member", "DeleteMember");
     });
 });
 

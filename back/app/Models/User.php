@@ -44,12 +44,12 @@ class User extends Authenticatable
     }
 
     /**
-     * @return Groupe[]
+     * @return Group[]
      */
-    public function groupes()
+    public function groups()
     {
         return $this->join(
-            (new UserGroupe())->getTable()." as ug",
+            (new UserGroup())->getTable()." as ug",
             "ug.user_id",
             "=",
             "users.id"
