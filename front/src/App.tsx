@@ -1,10 +1,24 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import Echo from './echo'
 
 function App() {
   const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    Echo.private(`App.User.${1}`)
+        .listen('user.notification', (response: null) => {
+    // Echo.channel(`public-updates`)
+    //     .listen('public.notification', (response: null) => {
+            console.log("Event received:", response);
+        });
+
+        return () => {
+          Echo.leave(`App.User.${1}`)
+        }
+  }, [])
 
   return (
     <>

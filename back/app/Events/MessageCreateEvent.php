@@ -2,23 +2,22 @@
 
 namespace App\Events;
 
-use App\Models\User;
-use Illuminate\Broadcasting\Channel;
+use App\Models\Groupe;
+use App\Models\Message;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class UserEvent implements ShouldBroadcast
+class MessageCreateEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(public $downloadURL, public User $user)
+    public function __construct(public Groupe $group, public Message $message)
     {
         //
     }
@@ -31,21 +30,20 @@ class UserEvent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel("App.User." . $this->user->id),
+            new PrivateChannel("group." . $this->group->id)
         ];
     }
 
     public function broadcastWith(): array
     {
-        return array(
-            'username' => __('app.welcome_message', ['username' => $this->user->name]),
-            'message' => __('events.download_hawb_ready'),
-        );
+        return [
+            'message' => $this->message
+        ];
     }
 
     public function broadcastAs(): string
     {
-        return 'user.notification';
+        return 'message.create';
     }
 
 }
