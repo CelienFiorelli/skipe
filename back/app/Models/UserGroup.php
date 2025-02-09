@@ -21,10 +21,15 @@ class UserGroup extends Model
 
     protected $primaryKey = ["group_id", "user_id"];
 
+    protected $fillable = [
+        "group_id", "user_id", "user_is_quited"
+    ];
+
     protected $casts = [
         "user_is_quited" => "boolean"
     ];
 
+    public $incrementing = false;
     public $timestamps = false;
 
     public function user(): BelongsTo

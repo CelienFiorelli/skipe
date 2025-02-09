@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\GroupDeleteMemberRequest;
+use App\Http\Requests\GroupMemberRequest;
 use App\Http\Requests\GroupRequest;
 use App\Models\Group;
 use App\Models\UserGroup;
@@ -33,14 +33,51 @@ class GroupController extends Controller
         {
             UserGroup::create([
                 "user_id" => $element,
-                "group_id" => $group->id
+                "group_id" => $group->id,
+                "user_is_quited" => false
             ]);
         }
 
         return response()->json(["groupId" => $group->id]);
     }
 
-    public function DeleteMember(GroupDeleteMemberRequest $_request)
+    public function AddMember(GroupMemberRequest $_request)
+    {
+        $info = $_request->validated();
+
+        $userGroup = UserGroup::query()
+            ->where([
+                ["group_id", "=", $info["group_id"]],
+                ["user_id", "=", $info["user_id"]]
+            ])
+            ->first();
+
+        if($userGroup === null)
+        {
+            $userGroup = UserGroup::query()
+                ->create([
+                    "group_id" => $info["group_id"],
+                    "user_id" => $info["user_id"],
+                ]);
+
+            $ok = $userGroup->id != 0;
+        }
+        else
+        {
+            $nb = UserGroup::query()
+                ->where([
+                    ["group_id", "=", $info["group_id"]],
+                    ["user_id", "=", $info["user_id"]]
+                ])
+                ->update([ "user_is_quited" => false ]);
+
+            $ok = $nb > 0;
+        }
+
+        return $ok ? response()->noContent() : response("", 500)->json(["message" => "impossible d'ajouter un membre au groupe"]);
+    }
+
+    public function DeleteMember(GroupMemberRequest $_request)
     {
         $info = $_request->validated();
 
@@ -49,7 +86,7 @@ class GroupController extends Controller
                 ["group_id", "=", $info["group_id"]],
                 ["user_id", "=", $info["user_id"]]
             ])
-            ->update([ "user_is_quited" => false ]);
+            ->update([ "user_is_quited" => true ]);
 
         return $nb > 1 ? response()->noContent() : response("", 404);
     }
