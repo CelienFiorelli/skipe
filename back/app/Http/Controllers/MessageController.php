@@ -20,7 +20,7 @@ class MessageController extends Controller
             return response("groupe id not lower or equal to 0", 400);
 
         $list = Message::query()
-            ->where("groupe_id", $groupId)
+            ->where("group_id", $groupId)
             ->get();
 
         return response()->json($list);

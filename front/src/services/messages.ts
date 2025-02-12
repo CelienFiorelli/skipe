@@ -1,27 +1,18 @@
 import { MessageType } from "../typings/MessageType";
 import axios from "./AxiosService";
 
-type getMessagesResponseType = {
-    messages: Array<MessageType>;
-    firstMessageId: number;
-    lastMessageId: number;
-}
-export const getMessages = async (conversationId: number, queryParameter: Record<string, string | number> = {}): Promise<getMessagesResponseType> => {
+export const getMessages = async (groupId: number): Promise<MessageType[]> => {
     try {
-        const queryString = Object.keys(queryParameter)
-            .map((key: string) => `${key}=${queryParameter[key]}`)
-            .join('&');
-
-        const response = await axios.get(`/conversations/${conversationId}/messages?${queryString}`);
+        const response = await axios.get(`/message/list/${groupId}`);
         return response.data;
     } catch (error: any) {
         throw new Error(error);
     }
 };
 
-export const createMessage = async (conversationId: number, content: string): Promise<MessageType> => {
+export const createMessage = async (groupId: number, content: string): Promise<MessageType> => {
     try {
-        const response = await axios.post(`/conversations/${conversationId}/messages`, {
+        const response = await axios.post(`/conversations/${groupId}/messages`, {
             content: content
         });
         return response.data.message;

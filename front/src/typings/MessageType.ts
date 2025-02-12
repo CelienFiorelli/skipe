@@ -1,9 +1,9 @@
-import { SimpleUserType } from "./SimpleUserType"
-
 export type MessageType = {
-    id: number
-    content: string
-    sender: SimpleUserType
-    createdAt: string
-    isUpdated: boolean
+	id: number;
+	user_id: 1;
+	group_id: 3;
+	content: string;
+	is_file: boolean;
+	created_at: string;
+	updated_at: string;
 }
