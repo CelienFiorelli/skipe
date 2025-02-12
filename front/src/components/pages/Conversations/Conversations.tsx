@@ -1,248 +1,114 @@
-import "./Conversations.css";
-import { useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Conversation, Message } from "../../organisms";
-import { createMessage, getConversations, getMessages } from "../../../services/messages";
-import { ConversationType } from "../../../typings/ConversationType";
-import { MessageType } from "../../../typings/MessageType";
-import { IoMdSend } from "react-icons/io";
-import { FaFileImage } from "react-icons/fa";
-import { timestampFormat } from "../../../services/FormatterService";
-import { useAuth } from "../../../contexts/AuthContext";
+import { ConversationsSidebar } from '../../organisms';
+import { useAuth } from '../../../contexts/AuthContext';
+import { GroupCreationModale } from '../../molecules';
+import { useEffect, useRef, useState } from 'react';
+import { createGroup, getGroups } from '../../../services/GroupsService';
+import { GroupType } from '../../../typings/GroupType';
+import { useNavigate, useParams } from 'react-router-dom';
+import { MessageType } from '../../../typings/MessageType';
+import { getMessages } from '../../../services/messages';
+import { Box, CircularProgress } from '@mui/material';
+import { Typography } from '../../atoms';
+import './Conversations.css';
 
-const Conversations: React.FC = () => {
-    const { user } = useAuth();
-    const { id } = useParams();
-    const navigate = useNavigate();
-    const [conversations, setConversations] = useState<Array<ConversationType>>([]);
-    const [currentConversation, setCurrentConversation] = useState<ConversationType | null>(null);
-    const [pageIsLoad, setPageIsLoad] = useState<boolean>(false);
-    const [messages, setMessages] = useState<Array<MessageType>>([]);
-    const [messageBoundary, setMessageBoundary] = useState<any>({
-        first: null,
-        last: null,
-    });
-    const [messageIsLoading, setMessageIsLoading] = useState<boolean>(false);
-    const [messageContent, setMessageContent] = useState<string>("");
-    const messageInputRef = useRef<HTMLTextAreaElement | null>(null);
-    const fileInputRef = useRef<HTMLInputElement | null>(null);
-    const [fileName, setFileName] = useState<string>("");
+const Conversations = () => {
+	const { logout, user } = useAuth();
+	const { id } = useParams();
+	const navigate = useNavigate();
+	const [refreshGroups, setRefreshGroups] = useState(0);
 
-    const selectConversation = async (conversation: ConversationType) => {
-        setMessages([]);
-        setCurrentConversation(conversation);
-        if (!id || parseInt(id) !== conversation.id) {
-            navigate(`/conversations/${conversation.id}`);
-        }
-        const messagesData = await getMessages(conversation.id);
-        setMessages(messagesData.messages);
-        setMessageBoundary({
-            first: messagesData.firstMessageId,
-            last: messagesData.lastMessageId,
-        });
-    };
+	const [groups, setGroups] = useState<Array<GroupType>>([]);
+	const [currentGroup, setCurrentGroup] = useState<GroupType | null>(null);
+	const [messages, setMessages] = useState<Array<MessageType>>([]);
+	const [loading, setLoading] = useState<boolean>(true);
+	const [messageLoading, setMessageLoading] = useState<boolean>(false);
+	const [messageBoundary, setMessageBoundary] = useState<any>({
+		first: null,
+		last: null,
+	});
+	const messageInputRef = useRef<HTMLTextAreaElement | null>(null);
+	const fileInputRef = useRef<HTMLInputElement | null>(null);
+	const [fileName, setFileName] = useState<string>("");
+	const [messageContent, setMessageContent] = useState<string>("");
+	const [groupCreationModaleOpen, setGroupCreationModaleOpen] = useState(false);
+	const [groupCreationModaleLoading, setGroupCreationModaleLoading] = useState(false);
+	const [groupCreationModaleError, setGroupCreationModaleError] = useState(false);
 
-    const sendMessage = async () => {
-        if (!messageContent.replaceAll(" ", "") || !currentConversation) return;
-        await createMessage(currentConversation.id, messageContent);
-        setMessageContent("");
-        if (messageInputRef.current) {
-            messageInputRef.current.focus();
-        }
-    };
+	const selectGroup = async (group: GroupType) => {
+		setMessages([]);
+		setCurrentGroup(group);
+		if (!id || parseInt(id) !== group.id) {
+			navigate(`/conversations/${group.id}`);
+		}
+		const messagesData = await getMessages(group.id);
+		setMessages(messagesData.messages);
+		setMessageBoundary({
+			first: messagesData.firstMessageId,
+			last: messagesData.lastMessageId,
+		});
+	};
 
-    const textAreaPress = (e: any) => {
-        if (e.keyCode === 13 && !e.shiftKey) {
-            e.preventDefault();
-            sendMessage();
-        }
-    };
+	const openGroupCreationModale = () => setGroupCreationModaleOpen(true);
 
-    const handleScroll = async (e: any) => {
-        if (!currentConversation) return;
-        if (messages[messages.length - 1].id !== messageBoundary.first && !messageIsLoading && e.target.scrollHeight - e.target.clientHeight - Math.abs(e.target.scrollTop) < 500) {
-            // Scroll up
-            setMessageIsLoading(true);
-            const nextMessages = await getMessages(currentConversation.id, {
-                beforeId: messages[messages.length - 1].id,
-            });
+	const createNewGroup = async (name: string, userIdList: string) => {
+		try {
+			if (groupCreationModaleError) setGroupCreationModaleError(false);
+			setGroupCreationModaleLoading(true);
+			await createGroup(name, userIdList);
+			setGroupCreationModaleOpen(false);
+			setRefreshGroups(prev => prev + 1);
+		} catch (error) {
+			setGroupCreationModaleError(true);
+		} finally {
+			setGroupCreationModaleLoading(false);
+		}
+	}
 
-            setMessageBoundary({
-                first: nextMessages.firstMessageId,
-                last: nextMessages.lastMessageId,
-            });
-            setMessages((messages) => {
-                messages.splice(
-                0,
-                messages.length + nextMessages.messages.length - 100
-                );
-                return [...messages, ...nextMessages.messages];
-            });
-            setMessageIsLoading(false);
-        } else if (messages[0].id !== messageBoundary.last && !messageIsLoading && Math.abs(e.target.scrollTop) < 500) {
-            // Scroll down
-            setMessageIsLoading(true);
-            const nextMessages = await getMessages(currentConversation.id, {
-                afterId: messages[0].id,
-            });
-            setMessageBoundary({
-                first: nextMessages.firstMessageId,
-                last: nextMessages.lastMessageId,
-            });
+	useEffect(() => {
+		(async () => {
+			const fetchGroups = await getGroups();
+			setGroups(fetchGroups);
+			if (groups.length) {
+				selectGroup(
+					fetchGroups.find((g: GroupType) => g.id.toString() === id) ||
+					fetchGroups[0]
+				);
+			}
 
-            setMessages((messages) => {
-                messages.splice(100 - nextMessages.messages.length);
-                return [...nextMessages.messages, ...messages];
-            });
-            setMessageIsLoading(false);
-        }
-    };
+			setLoading(false);
+		})();
+	}, [refreshGroups]);
 
-    useEffect(() => {
-        (async () => {
-            const fetchConversations = await getConversations();
-            setConversations(fetchConversations);
-            if (fetchConversations.length) {
-                selectConversation(
-                fetchConversations.find((c: any) => c.id === id) ||
-                    fetchConversations[0]
-                );
-            }
+	return (<>
+		<div style={{ display: 'flex', height: '100vh', width: '100vw' }}>
+			<ConversationsSidebar
+				name={user?.pseudo || 'Anonyme'}
+				onLogout={logout}
+				onGroupCreation={openGroupCreationModale}
+				style={{ minWidth: '300px' }}
+				loading={loading}
+				groups={groups}
+				selectedGroup={currentGroup}
+				onNewGroupSelected={selectGroup} />
 
-            setPageIsLoad(true);
-        })();
-    }, []);
-
-    return (
-        <div className="conversations-container">
-            <div className="conversations-list">
-                {conversations.map((conversation) => {
-                    return (
-                        <Conversation key={conversation.id}
-                                      conversation={conversation}
-                                      isSelected={currentConversation !== null && currentConversation.id === conversation.id}
-                                      onClick={selectConversation} />
-                    );
-                })}
-            </div>
-            <div className="messages-container">
-                {messages && (
-                    <div className="messages-wrapper">
-                        {conversations.length > 0 && currentConversation ? (
-                            <>
-                                <div className="message-reveicer">
-                                    { currentConversation.seller.name }
-                                </div>
-                                <div className="messages-padding">
-                                    <div onScroll={handleScroll} className="messages-scroll">
-                                        {messages.map((message, i) => {
-                                            return (
-                                                <div key={message.id}>
-                                                    {messageBoundary.first === message.id && (
-                                                        <div className="conversation-start">
-                                                            <div className="conversation-title">
-                                                            Bonjour,
-                                                            </div>
-                                                            <div className="conversation-info">
-                                                            Ceci est le début de votre conversation avec {currentConversation.buyer.name}
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                    {(i === messages.length - 1 ||
-                                                        (i <= messages.length - 1 &&
-                                                            new Date(message.createdAt).toLocaleString("fr", {
-                                                            hour12: false,
-                                                            dateStyle: "short",
-                                                            }) !==
-                                                            new Date(messages[i + 1].createdAt).toLocaleString("fr", {
-                                                                hour12: false,
-                                                                dateStyle: "short",
-                                                            }))) && (
-                                                        <div className="date-divider">
-                                                            <div className="divider-line"></div>
-                                                            <div>{timestampFormat(message.createdAt)}</div>
-                                                            <div className="divider-line"></div>
-                                                        </div>
-                                                    )}
-                                                    <Message message={message}
-                                                            withAvatar={
-                                                                i === messages.length - 1 ||
-                                                                (i <= messages.length - 1 &&
-                                                                message.sender.id !==
-                                                                    messages[i + 1].sender.id) ||
-                                                                new Date(message.createdAt).toLocaleString("fr", {
-                                                                hour12: false,
-                                                                dateStyle: "short",
-                                                                }) !==
-                                                                new Date(messages[i + 1].createdAt).toLocaleString("fr", {
-                                                                    hour12: false,
-                                                                    dateStyle: "short",
-                                                                })
-                                                            }
-                                                            isCurrentUser={!!user && user.id === message.sender.id} />
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-                                <div className="message-input-container">
-                                    {fileName &&
-                                        fileInputRef.current && fileInputRef.current.files &&
-                                        fileInputRef.current.files.length > 0 && (
-                                        <div className="file-preview">
-                                            <FaFileImage />
-                                            <div className="file-name">
-                                                {fileInputRef.current.files[0].name}
-                                            </div>
-                                        </div>
-                                    )}
-                                    <div className="input-wrapper">
-                                        <div>
-                                            <input type="file"
-                                                ref={fileInputRef}
-                                                className="file-input"
-                                                id="file"
-                                                onChange={(e) => setFileName(e.target.value)} />
-                                            <label htmlFor="file">
-                                                <div className="file-button">
-                                                    <FaFileImage />
-                                                </div>
-                                            </label>
-                                        </div>
-                                        <textarea ref={messageInputRef}
-                                                autoFocus
-                                                onKeyDown={textAreaPress}
-                                                value={messageContent}
-                                                onChange={(e) => setMessageContent(e.target.value)}
-                                                className="message-input"></textarea>
-                                        <button className="send-button"
-                                                onClick={sendMessage}>
-                                            <IoMdSend size={20} />
-                                        </button>
-                                    </div>
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                {pageIsLoad && (
-                                <div className="no-conversation">
-                                    <div>
-                                    <div className="no-conversation-title">
-                                        Aucune conversation
-                                    </div>
-                                    <div className="no-conversation-info">
-                                        Voir les offres
-                                    </div>
-                                    </div>
-                                </div>
-                                )}
-                            </>
-                        )}
-                    </div>
-                )}
-            </div>
-        </div>
-    );
+			<Box flexGrow='1' display='flex' flexDirection='column'>
+				<Box flexGrow='1' padding='20px'>
+					{loading ?
+						(<Box display='flex' justifyContent='center' alignItems='center' height='100%'><CircularProgress /></Box>)
+						:
+						(<>{groups.length ?
+							<h1>Contenu principal</h1>
+							:
+							(<Box display='flex' justifyContent='center' alignItems='center' height='100%'>
+								<Typography variant='h5'>Vous ne faites partie d'aucun groupe. Créez un groupe ou faites vous inviter.</Typography>
+							</Box>)
+						}</>)
+					}
+				</Box>
+			</Box>
+		</div>
+		<GroupCreationModale open={groupCreationModaleOpen} setOpen={setGroupCreationModaleOpen} onGroupCreation={createNewGroup} error={groupCreationModaleError} loading={groupCreationModaleLoading} />
+	</>);
 };
 
 export default Conversations;

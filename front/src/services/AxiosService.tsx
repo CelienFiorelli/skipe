@@ -22,15 +22,4 @@ axiosService.interceptors.request.use(
 	}
 );
 
-axiosService.interceptors.response.use(
-	(response) => response,
-	(error) => {
-		if (error.response?.status === 401 && !window.location.pathname.startsWith("/auth")) {
-			console.error('Unauthorized, redirecting to login...');
-			window.location.href = "/auth/login";
-		}
-		return Promise.reject(error);
-	}
-);
-
 export default axiosService;

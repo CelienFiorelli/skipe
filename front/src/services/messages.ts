@@ -1,15 +1,5 @@
-import { ConversationType } from "../typings/ConversationType";
 import { MessageType } from "../typings/MessageType";
 import axios from "./AxiosService";
-
-export const getConversations = async (): Promise<Array<ConversationType>> => {
-    try {
-        const response = await axios.get(`/conversations`);
-        return response.data.conversations;
-    } catch (error: any) {
-        throw new Error(error);
-    }
-};
 
 type getMessagesResponseType = {
     messages: Array<MessageType>;

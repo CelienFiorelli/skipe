@@ -4,7 +4,6 @@ import { ChangeEvent, FC, useState } from "react";
 import { LoginRequestModel } from "../../../typings/Auth";
 import axiosService from "../../../services/AxiosService";
 import { useAuth } from "../../../contexts/AuthContext";
-import theme from "../../../theme";
 import {useTheme} from "@mui/material/styles";
 
 
@@ -27,14 +26,14 @@ const LoginForm: FC = () => {
 
 		try {
 			const response = await axiosService.post("/login", data);
-			const reponseData = response?.data;
-			if (reponseData?.user == null || reponseData?.user == null)
+			const responseData = response?.data;
+			if (responseData?.user == null || responseData?.user == null)
 				throw new Error();
-
-			login(reponseData.user, reponseData.token, () => {
-				window.location.href = '/profile';
+			login(responseData.user, responseData.token, () => {
+				window.location.href = '/';
 			});
 		} catch (error) {
+			console.log(error)
 			setErrors('Une erreur à été retournée, veuillez-rééssayer.');
 		} finally {
 			setLoading(false);

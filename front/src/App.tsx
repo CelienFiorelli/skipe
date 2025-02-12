@@ -1,16 +1,16 @@
 import './App.css';
-import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import Layout from './components/templates/Layout/Layout';
-import {Home, Offers, CreateOffer, Authentication, Conversations} from './components/pages';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import ProtectedRoute from './components/shared/ProtectedRoute';
-import Profile from './components/pages/Profile/Profile';
+import { ThemeProvider, CssBaseline, Box } from "@mui/material";
 import theme from './theme';
-import {ThemeProvider, CssBaseline, Box} from "@mui/material";
+import { Authentication } from './components/pages';
+import AnonymousOnlyRoute from './components/shared/AnonymousOnlyRoute';
+import Conversations from './components/pages/Conversations/Conversations';
 
 function App() {
     return (
         <ThemeProvider theme={theme}>
-            <CssBaseline/> {/* Applique les styles par défaut de MUI */}
+            <CssBaseline />
             <Box sx={{
                 backgroundColor: 'background.default',
                 display: 'flex',
@@ -19,23 +19,17 @@ function App() {
             }}>
                 <BrowserRouter>
                     <Routes>
-                        <Route path='/' element={<Layout/>}>
-                            <Route index element={<Home/>}/>
-                            <Route path='/auth/:type' element={<Authentication/>}/>
-                            <Route path='/offers' element={<Offers/>}/>
-                            <Route path='/profile' element={
-                                <ProtectedRoute>
-                                    <Profile/>
-                                </ProtectedRoute>
-                            }/>
-                            <Route path='/conversations/:id?' element={
-                                <ProtectedRoute>
-                                    <Conversations/>
-                                </ProtectedRoute>
-                            }/>
-
-                            <Route path='/offers/form' element={<CreateOffer/>}/>
-                        </Route>
+                        <Route path="/auth/:type" element={
+							<AnonymousOnlyRoute>
+								<Authentication />
+							</AnonymousOnlyRoute>
+						} />
+                        <Route path="/" element={<Navigate to="/conversations" replace />} />
+                        <Route path="/conversations/:id?" element={
+                            <ProtectedRoute>
+                                <Conversations />
+                            </ProtectedRoute>
+                        } />
                     </Routes>
                 </BrowserRouter>
             </Box>

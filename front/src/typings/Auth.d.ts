@@ -4,14 +4,14 @@ export type LoginRequestModel = {
 }
 
 export type RegisterRequestModel = {
-    name: string;
+    pseudo: string;
     email: string;
     password: string;
 }
 
 export interface User {
     id: number;
-    name: string;
+    pseudo: string;
     email: string;
     email_verified_at: string | null;
     created_at: string;

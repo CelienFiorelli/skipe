@@ -1,0 +1,8 @@
+.sidebar-header {
+	cursor: pointer;
+	background: #DDD;
+}
+
+.sidebar-header:hover {
+	background: #AAA;
+}

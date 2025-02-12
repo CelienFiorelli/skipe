@@ -1,0 +1,16 @@
+.group-container {
+    width: 90%;
+    cursor: pointer;
+    border-radius: 0.375rem 0 0 0.375rem;
+    gap: 0.5rem;
+    background-color: #D99E89;
+	padding: 1rem;
+}
+
+.group-unselected {
+    border-left: 8px solid white;
+}
+
+.group-selected {
+    border-left: 8px solid #F2DC6B;
+}

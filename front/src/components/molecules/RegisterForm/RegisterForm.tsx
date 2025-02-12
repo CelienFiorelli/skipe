@@ -3,17 +3,17 @@ import { ChangeEvent, FC, useState } from "react";
 import { TextField, Typography } from "../../atoms";
 import { RegisterRequestModel } from "../../../typings/Auth";
 import axiosService from "../../../services/AxiosService";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { useAuth } from "../../../contexts/AuthContext";
 import {useTheme} from "@mui/material/styles";
 
 const RegisterForm: FC = () => {
-	const [name, setName] = useState('');
+	const [pseudo, setPseudo] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
 	const [errors, setErrors] = useState({
-		name: '',
+		pseudo: '',
 		email: '',
 		password: '',
 		confirmPassword: '',
@@ -49,14 +49,14 @@ const RegisterForm: FC = () => {
 		e.preventDefault();
 		setLoading(true);
 
-		setErrors({ name: '', email: '', password: '', confirmPassword: '', general: '' });
+		setErrors({ pseudo: '', email: '', password: '', confirmPassword: '', general: '' });
 
 		if (!validateForm()) {
 			setLoading(false);
 			return;
 		}
 
-		const data: RegisterRequestModel = { name, email, password };
+		const data: RegisterRequestModel = { pseudo: pseudo, email, password };
 
 		try {
 			const response = await axiosService.post("/register", data);
@@ -64,16 +64,17 @@ const RegisterForm: FC = () => {
 			if (!responseData?.user || !responseData?.token) throw new Error();
 
 			login(responseData.user, responseData.token, () => {
-				window.location.href = '/profile';
+				window.location.href = '/';
 			});
 		} catch (error) {
 			if (axios.isAxiosError(error)) {
 				const apiErrors = error.response?.data.errors ?? { general: error.message };
 				setErrors(prevErrors => ({
 					...prevErrors,
-					name: apiErrors.name ? apiErrors.name[0] : '',
+					pseudo: apiErrors.pseudo ? apiErrors.pseudo[0] : '',
 					email: apiErrors.email ? apiErrors.email[0] : '',
 					password: apiErrors.password ? apiErrors.password[0] : '',
+					general: apiErrors.general ?? ''
 				  }));
 			} else {
 				console.error('Erreur inconnue:', error);
@@ -107,10 +108,10 @@ const RegisterForm: FC = () => {
 					fullWidth
 					margin="normal"
 					type="text"
-					value={name}
-					onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+					value={pseudo}
+					onChange={(e: ChangeEvent<HTMLInputElement>) => setPseudo(e.target.value)}
 					required
-					errorText={errors.name}
+					errorText={errors.pseudo}
 					disabled={loading}
 				/>
 				<TextField
@@ -157,10 +158,10 @@ const RegisterForm: FC = () => {
 					sx={{ marginTop: '20px' }}
 					disabled={loading}
 				>
-					{loading ? <CircularProgress size={24} color="inherit" /> : 'Se connecter'}
+					{loading ? <CircularProgress size={24} color="inherit" /> : 'Créer mon compte'}
 				</Button>
 				{errors.general && (
-					<Typography variant="body1" style={{ marginTop: '16px', color: 'red' }}>
+					<Typography variant="body1" style={{ marginTop: '16px', color: 'red', textAlign: 'center' }}>
 						{errors.general}
 					</Typography>
 				)}
