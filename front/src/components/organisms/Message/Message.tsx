@@ -1,7 +1,6 @@
 import { useRef, useState, FC } from "react";
 import { MessageType } from "../../../typings/MessageType";
 import { deleteMessage, editMessage } from "../../../services/messages";
-import Avatar from "../../atoms/Avatar/Avatar";
 import { FaPen, FaTrash, FaCheck } from "react-icons/fa";
 import "./Message.css";
 import { timestampFormat } from "../../../services/FormatterService";
