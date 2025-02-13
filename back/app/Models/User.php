@@ -54,11 +54,16 @@ class User extends Authenticatable
             "=",
             "users.id"
         )
+        ->join(
+            (new Group())->getTable()." as g",
+            "g.id",
+            "=",
+            "ug.group_id"
+        )
         ->where([
             ["ug.user_id", $this->id],
             ["user_is_quited", false]
-
         ])
-        ->get();
+        ->get("g.*");
     }
 }
