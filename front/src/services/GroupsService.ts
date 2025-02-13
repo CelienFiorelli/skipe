@@ -4,7 +4,7 @@ import axios from "./AxiosService";
 export const getGroups = async (): Promise<Array<GroupType>> => {
 	try {
 		const response = await axios.get(`/group/list`);
-		return response.data.map((g: any) => { return {id: g.group_id} })
+		return response.data;
 		;
 	} catch (error: any) {
 		throw new Error(error);
@@ -12,7 +12,7 @@ export const getGroups = async (): Promise<Array<GroupType>> => {
 };
 
 export const createGroup = async (name: string, userIdList: string): Promise<number> => {
-	let data: AddGroupRequestModel = {
+	const data: AddGroupRequestModel = {
 		name,
 		userIdList: userIdList.replaceAll(" ", "").split(",")
 	};

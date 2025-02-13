@@ -1,9 +1,14 @@
 export type MessageType = {
 	id: number;
-	user_id: 1;
-	group_id: 3;
+	user: UserType;
+	group_id: number;
 	content: string;
 	is_file: boolean;
 	created_at: string;
 	updated_at: string;
+}
+
+type UserType = {
+	id: number;
+	pseudo: string;
 }

@@ -14,19 +14,20 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MessageController extends Controller
 {
-    public function List(int $groupId): JsonResponse
+    public function list(int $groupId)
     {
         if($groupId <= 0)
             return response("groupe id not lower or equal to 0", 400);
 
         $list = Message::query()
+            ->with('user:id,pseudo')
             ->where("group_id", $groupId)
             ->get();
 
         return response()->json($list);
     }
 
-    public function Fichier(Request $_request): StreamedResponse | Response
+    public function fichier(Request $_request): StreamedResponse | Response
     {
         $path = $_request->query->getString("path");
 
@@ -36,7 +37,7 @@ class MessageController extends Controller
         return Storage::download($path);
     }
 
-    public function Add(MessageRequest $_request): JsonResponse
+    public function add(MessageRequest $_request): JsonResponse
     {
         $messageRequest = $_request->validated();
 
@@ -60,6 +61,7 @@ class MessageController extends Controller
             $info["content"] = $messageRequest["content"];
 
         $message = Message::query()->create($info);
+        $message->load('user:id,pseudo');
 
         return response()->json($message);
     }

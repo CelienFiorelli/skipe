@@ -20,7 +20,7 @@ class MessageRequest extends FormRequest
                 "nullable", 
                 File::types(["png", "jpg", "jpeg", "svg"])->max("2mb")
             ],
-            "groupe_id" => "required|integer|min:1"
+            "group_id" => "required|integer|min:1"
         ];
     }
 }

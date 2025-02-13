@@ -38,7 +38,7 @@ const ConversationBody: FC<ConversationBodyProps> = ({ messages, onMessageSend, 
 			{messages && (
 				<div className="messages-wrapper">
 					<div className="message-reveicer">
-						{currentGroup.id}
+						{currentGroup.name}
 					</div>
 					<div className="messages-padding">
 						{messages.length > 0 ?

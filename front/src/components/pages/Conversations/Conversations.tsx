@@ -21,7 +21,6 @@ const Conversations = () => {
 	const [currentGroup, setCurrentGroup] = useState<GroupType | null>(null);
 	const [messages, setMessages] = useState<Array<MessageType>>([]);
 	const [messageLoading, setMessageLoading] = useState<boolean>(false);
-	
 	const messageInputRef = useRef<HTMLTextAreaElement | null>(null);
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
 	const [fileName, setFileName] = useState<string>("");
@@ -60,7 +59,7 @@ const Conversations = () => {
 			await createGroup(name, userIdList);
 			setGroupCreationModaleOpen(false);
 			setRefreshGroups(prev => prev + 1);
-		} catch (error) {
+		} catch {
 			setGroupCreationModaleError(true);
 		} finally {
 			setGroupCreationModaleLoading(false);

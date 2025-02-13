@@ -18,8 +18,11 @@ const GroupInfos: FC<GroupInfosProps> = ({ group, isSelected, onClick }) => {
         <div className={`group-container ${isSelected ? "group-selected" : "group-unselected"}`}
              onClick={handleClick}>
             <div className="group-wrapper">
-                <Typography variant='body'>Groupe: {group.id}</Typography>
+                <Typography variant='body' sx={{ fontWeight: '600' }}>{ group.name }</Typography>
             </div>
+            <Typography variant='body' sx={{ fontSize: '12px' }}>
+                { group.users.length >= 3 ? group.users.length : group.users.join(', ') }
+            </Typography>
         </div>
     );
 };

@@ -12,10 +12,11 @@ export const getMessages = async (groupId: number): Promise<MessageType[]> => {
 
 export const createMessage = async (groupId: number, content: string): Promise<MessageType> => {
     try {
-        const response = await axios.post(`/conversations/${groupId}/messages`, {
-            content: content
+        const response = await axios.post(`/message/add`, {
+            content: content,
+            group_id: groupId
         });
-        return response.data.message;
+        return response.data;
     } catch (error: any) {
         throw new Error(error);
     }
