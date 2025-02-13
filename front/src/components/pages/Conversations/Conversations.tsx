@@ -21,7 +21,7 @@ const Conversations = () => {
 	const [currentGroup, setCurrentGroup] = useState<GroupType | null>(null);
 	const [messages, setMessages] = useState<Array<MessageType>>([]);
 	const [messageLoading, setMessageLoading] = useState<boolean>(false);
-0
+	
 	const messageInputRef = useRef<HTMLTextAreaElement | null>(null);
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
 	const [fileName, setFileName] = useState<string>("");
@@ -32,7 +32,7 @@ const Conversations = () => {
 
 	const sendMessage = async () => {
 		setMessageLoading(true);
-        if (!messageContent.replaceAll(" ", "") || !currentGroup) return;
+		if (!messageContent.replaceAll(" ", "") || !currentGroup) return;
         await createMessage(currentGroup.id, messageContent);
         setMessageContent("");
         if (messageInputRef.current) {
@@ -100,7 +100,7 @@ const Conversations = () => {
 						(<Box display='flex' justifyContent='center' alignItems='center' height='100%'><CircularProgress /></Box>)
 						:
 						(<>{groups.length && currentGroup ?
-							<ConversationBody 
+							<ConversationBody
 								currentGroup={currentGroup!} 
 								messages={messages}
 								messageContent={messageContent} 
