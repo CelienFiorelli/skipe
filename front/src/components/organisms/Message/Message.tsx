@@ -29,7 +29,10 @@ export const Message: FC<MessageProps> = ({ message, isCurrentUser }) => {
 	const saveEdit = async () => {
 		setIsEditable(false)
 		if (!messageContentRef || !messageContentRef.current || messageContentRef.current.innerText === message.content) return;
-		await editMessage(message.id, { content: messageContentRef.current.innerText })
+		await editMessage(message.id, {
+			content: messageContentRef.current.innerText,
+			group_id: message.group_id
+		})
 	}
 
 	const deleteMessageAction = async () => {

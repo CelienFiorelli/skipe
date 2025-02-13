@@ -24,7 +24,7 @@ export const createMessage = async (groupId: number, content: string): Promise<M
 
 export const editMessage = async (messageId: number, field: Object): Promise<MessageType> => {
     try {
-        const response = await axios.put(`/messages/${messageId}`, field);
+        const response = await axios.put(`/message/${messageId}`, field);
         return response.data.message;
     } catch (error: any) {
         throw new Error(error);
@@ -33,7 +33,7 @@ export const editMessage = async (messageId: number, field: Object): Promise<Mes
 
 export const deleteMessage = async (messageId: number): Promise<boolean> => {
     try {
-        await axios.delete(`/messages/${messageId}`);
+        await axios.delete(`/message/${messageId}`);
         return true;
     } catch (error: any) {
         throw new Error(error);

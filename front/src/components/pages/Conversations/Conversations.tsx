@@ -9,6 +9,7 @@ import { MessageType } from '../../../typings/MessageType';
 import { createMessage, getMessages } from '../../../services/messages';
 import { Box, CircularProgress } from '@mui/material';
 import { Typography } from '../../atoms';
+import Echo from '../../../services/EchoService';
 
 const Conversations = () => {
 	const { logout, user } = useAuth();
@@ -41,6 +42,10 @@ const Conversations = () => {
     };
 
 	const selectGroup = async (group: GroupType) => {
+		if (currentGroup) {
+			console.log('leave');
+			Echo.leave(`group.${currentGroup.id}`);
+		}
 		setMessages([]);
 		setCurrentGroup(group);
 		if (!id || parseInt(id) !== group.id) {
@@ -48,11 +53,27 @@ const Conversations = () => {
 		}
 		const messagesData = await getMessages(group.id);
 		setMessages(messagesData.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()) ?? []);
+		
+		Echo.private(`group.${group.id}`)
+			.listen('.message.create', (response: any) => {
+				setMessages((messages) => [response.message, ...messages])
+			}).listen('.message.update', (response: any) => {
+				setMessages((messages) => {
+					const index = messages.findIndex((message) => response.message.id === message.id)
+					messages[index] = response.message
+					return [...messages]
+				})
+			}).listen('.message.delete', (response: any) => {
+				setMessages((messages) => {
+					return messages.filter(message => message.id !== response.messageId)
+				})
+			});
+		
 	};
 
 	const openGroupCreationModale = () => setGroupCreationModaleOpen(true);
 
-	const createNewGroup = async (name: string, userIdList: string) => {
+	const createNewGroup = async (name: string, userIdList: string) => {		
 		try {
 			if (groupCreationModaleError) setGroupCreationModaleError(false);
 			setGroupCreationModaleLoading(true);
@@ -79,6 +100,12 @@ const Conversations = () => {
 
 			setLoading(false);
 		})();
+
+		return () => {
+			if (currentGroup) {
+				Echo.leave(`group.${currentGroup.id}`)
+			}
+		}
 	}, [refreshGroups]);
 
 	return (<>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\UserGroup;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -13,6 +14,12 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+Broadcast::channel('group.{id}', function ($user, $id) {
+    return UserGroup::query()
+        ->where('user_id', $user->id)
+        ->where('group_id', $id)->exists();
+});
+
+Broadcast::channel('public-updates', function () {
+    return true;
 });

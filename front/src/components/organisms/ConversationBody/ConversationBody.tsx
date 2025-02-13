@@ -73,7 +73,7 @@ const ConversationBody: FC<ConversationBodyProps> = ({ messages, onMessageSend, 
 													</div>
 												)}
 											<Message message={message}
-												isCurrentUser={!!user && user.id === message.user_id} />
+												isCurrentUser={!!user && user.id === message.user.id} />
 										</div>
 									);
 								})}

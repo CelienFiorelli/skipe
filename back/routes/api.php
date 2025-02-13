@@ -27,6 +27,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             ->whereNumber("groupId");
 
         Route::post("add", "add");
+        Route::put("{message}", "update");
+        Route::delete("{message}", "destroy");
         Route::get("file", "fichier");
     });
 
