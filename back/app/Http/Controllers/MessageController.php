@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageCreateEvent;
+use App\Events\MessageDeleteEvent;
+use App\Events\MessageUpdateEvent;
 use App\Http\Requests\MessageRequest;
 use App\Models\Message;
 use Carbon\Carbon;
@@ -63,6 +66,32 @@ class MessageController extends Controller
         $message = Message::query()->create($info);
         $message->load('user:id,pseudo');
 
+        broadcast(new MessageCreateEvent($messageRequest["group_id"], $message));
+        
         return response()->json($message);
+    }
+
+    
+    public function update(Message $message, MessageRequest $request)
+    {
+        $validated = $request->validated();
+
+        $message->update($validated);
+        $message->save();
+        $message->load('user:id,pseudo');
+
+        broadcast(new MessageUpdateEvent($message->group_id, $message));
+        response()->json($message);
+    }
+
+    public function destroy(Message $message)
+    {
+        Message::query()
+            ->where('id', $message->id)
+            ->where('user_id', Auth::user()->id)
+            ->delete();
+
+        broadcast(new MessageDeleteEvent($message->group_id, $message->id));
+        return response()->noContent();
     }
 }

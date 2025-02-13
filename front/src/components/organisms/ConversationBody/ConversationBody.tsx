@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { MessageType } from "../../../typings/MessageType";
 import { GroupType } from "../../../typings/GroupType";
 import { IoMdSend } from "react-icons/io";
@@ -9,7 +9,6 @@ import { useAuth } from "../../../contexts/AuthContext";
 import './ConversationBody.css';
 import { Typography } from "../../atoms";
 import { Box } from "@mui/material";
-import Echo from "../../../services/EchoService";
 
 interface ConversationBodyProps {
 	messages: MessageType[];
@@ -33,17 +32,6 @@ const ConversationBody: FC<ConversationBodyProps> = ({ messages, onMessageSend, 
 			onMessageSend();
 		}
 	};
-
-	useEffect(() => {
-		Echo.private(`group.${currentGroup.id}`)
-			.listen('user.notification', (response: any) => {
-				console.log("Event received:", response);
-			});
-
-		return () => {
-			Echo.leave(`group.${currentGroup.id}`)
-		}
-	}, [currentGroup])
 
 	return (
 		<div className="messages-container">

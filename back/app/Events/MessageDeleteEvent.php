@@ -2,23 +2,22 @@
 
 namespace App\Events;
 
-use App\Models\User;
-use Illuminate\Broadcasting\Channel;
+use App\Models\Group;
+use App\Models\Message;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class PublicEvent implements ShouldBroadcast
+class MessageDeleteEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct()
+    public function __construct(public $groupId, public $messageId)
     {
         //
     }
@@ -31,20 +30,20 @@ class PublicEvent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel("public-updates"),
+            new PrivateChannel("group." . $this->groupId)
         ];
     }
 
     public function broadcastWith(): array
     {
-        return array(
-            'message' => __('events.download_hawb_ready'),
-        );
+        return [
+            'messageId' => $this->messageId
+        ];
     }
 
     public function broadcastAs(): string
     {
-        return 'public.notification';
+        return 'message.delete';
     }
 
 }
