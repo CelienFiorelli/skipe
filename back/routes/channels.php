@@ -19,3 +19,7 @@ Broadcast::channel('group.{id}', function ($user, $id) {
         ->where('user_id', $user->id)
         ->where('group_id', $id)->exists();
 });
+
+Broadcast::channel('public-updates', function () {
+    return true;
+});
