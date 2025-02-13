@@ -23,19 +23,19 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::controller(MessageController::class)->prefix("message")->group(function()
     {
-        Route::get("list/{groupId}", "List")
+        Route::get("list/{groupId}", "list")
             ->whereNumber("groupId");
 
-        Route::post("add", "Add");
-        Route::get("file", "Fichier");
+        Route::post("add", "add");
+        Route::get("file", "fichier");
     });
 
     Route::controller(GroupController::class)->prefix("group")->group(function()
     {
-        Route::get("list", "List");
-        Route::post("add", "Add");
-        Route::post("add-member", "AddMember");
-        Route::delete("delete-member", "DeleteMember");
+        Route::get("list", "list");
+        Route::post("add", "add");
+        Route::post("add-member", "addMember");
+        Route::delete("delete-member", "deleteMember");
     });
 });
 

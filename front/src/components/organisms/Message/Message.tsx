@@ -43,7 +43,7 @@ export const Message: FC<MessageProps> = ({ message, isCurrentUser }) => {
 				<div className="message-content-wrapper"
 					onMouseEnter={() => setIsHover(true)}
 					onMouseLeave={() => setIsHover(false)}>
-					<Typography variant="body2" sx={isCurrentUser && {textAlign: "right"}}>{isCurrentUser? "Moi" : message.user_id}</Typography>
+					<Typography variant="body2" sx={isCurrentUser && {textAlign: "right"}}>{isCurrentUser ? "Moi" : message.user.pseudo}</Typography>
 					<div key={message.id} className={`message-content ${isCurrentUser ? 'message-content-current-user' : 'message-content-other-user'} ${isEditable ? 'message-content-editable' : ''}`}>
 						<div contentEditable={isEditable} className="message-content-text" onKeyDown={editMessageAction} ref={messageContentRef}>
 							{message.content}

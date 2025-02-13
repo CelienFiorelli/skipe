@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
@@ -48,17 +49,10 @@ class User extends Authenticatable
      */
     public function groups()
     {
-        return $this->join(
-            (new UserGroup())->getTable()." as ug",
-            "ug.user_id",
-            "=",
-            "users.id"
-        )
-        ->where([
-            ["ug.user_id", $this->id],
-            ["user_is_quited", false]
-
-        ])
-        ->get();
+        return Group::query()
+        ->with('userGroups.user:pseudo,id')
+        ->whereHas('userGroups', function ($q) {
+            $q->where('user_id', Auth::id());
+        })->get();
     }
 }

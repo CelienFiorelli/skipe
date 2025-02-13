@@ -28,8 +28,8 @@ class Group extends Model
         return $this->hasMany(Message::class);
     }
 
-    public function users(): HasMany
+    public function userGroups(): HasMany
     {
-        return $this->hasMany(User::class);
+        return $this->hasMany(UserGroup::class);
     }
 }

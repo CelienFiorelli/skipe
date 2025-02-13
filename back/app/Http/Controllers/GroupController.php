@@ -4,44 +4,58 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\GroupMemberRequest;
 use App\Http\Requests\GroupRequest;
+use App\Http\Resources\GroupResource;
 use App\Models\Group;
+use App\Models\User;
 use App\Models\UserGroup;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class GroupController extends Controller
 {
-    public function List(): JsonResponse
+    public function list(): JsonResponse
     {
         /** @var User */
         $user = Auth::user();
+        $groups = $user->groups();
 
-        return response()->json($user->groups());
+        return response()->json(GroupResource::collection($groups));
     }
 
-    public function Add(GroupRequest $_request): JsonResponse
+    public function add(GroupRequest $_request): JsonResponse
     {
         $info = $_request->validated();
 
-        $group = Group::create([
-            "name" => $info["name"]
-        ]);
-
-        $info["userIdList"][] = Auth::user()->id;
-
-        foreach ($info["userIdList"] as $element)
-        {
-            UserGroup::create([
-                "user_id" => $element,
-                "group_id" => $group->id,
-                "user_is_quited" => false
+        try {
+            DB::beginTransaction();
+            $group = Group::create([
+                "name" => $info["name"]
             ]);
-        }
+    
+            $userIds = User::query()
+                ->whereIn('pseudo', $info["userIdList"])
+                ->orWhere('id', Auth::id())
+                ->pluck('id');
+            foreach ($userIds as $userId)
+            {
+                UserGroup::create([
+                    "user_id" => $userId,
+                    "group_id" => $group->id,
+                    "user_is_quited" => false
+                ]);
+            }
 
-        return response()->json(["groupId" => $group->id]);
+            DB::commit();
+            return response()->json(["groupId" => $group->id]);
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
-    public function AddMember(GroupMemberRequest $_request)
+    public function addMember(GroupMemberRequest $_request)
     {
         $info = $_request->validated();
 
@@ -77,7 +91,7 @@ class GroupController extends Controller
         return $ok ? response()->noContent() : response("", 500)->json(["message" => "impossible d'ajouter un membre au groupe"]);
     }
 
-    public function DeleteMember(GroupMemberRequest $_request)
+    public function deleteMember(GroupMemberRequest $_request)
     {
         $info = $_request->validated();
 

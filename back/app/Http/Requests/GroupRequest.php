@@ -11,7 +11,7 @@ class GroupRequest extends FormRequest
         return [
             "name" => "required|string|min:1",
             "userIdList" => "required|array",
-            "userIdList.*" => "integer|min:1|exists:users,id"
+            "userIdList.*" => "string|min:1|exists:users,pseudo"
         ];
     }
 }
