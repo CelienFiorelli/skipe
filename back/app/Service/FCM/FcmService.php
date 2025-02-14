@@ -20,12 +20,14 @@ class FcmService
     }
 
     // /**
-    //  * NE MARCHE PAS
+    //  * NE MARCHE PLUS
     //  * @return array Donne une liste d'erreur FCM ["message", "code"]
     //  */
     // public function SubscribeToTopic(string $_topicName, array $_tokenClientList): array
     // {
     //     $ch = curl_init($this->urlBaseTopic.":batchAdd");
+
+    //     $this->Init();
 
     //     curl_setopt($ch, CURLOPT_HTTPHEADER, [
     //         "Authorization: Bearer ".$this->token,
@@ -45,6 +47,8 @@ class FcmService
 
     //     $json = json_decode($response);
 
+    //     dd($json);
+
     //     if(isset($json->error))
     //     {
     //         $error = $json->error;
@@ -59,7 +63,7 @@ class FcmService
     // }
 
     // /**
-    //  * NE MARCHE PAS
+    //  * NE MARCHE PLUS
     //  * @return array Donne une liste d'erreur FCM ["message", "code"]
     //  */
     // public function UnsubscribeToTopic(string $_topicName, array $_tokenClientList): array
