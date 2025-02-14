@@ -19,81 +19,83 @@ class FcmService
         $this->Init();
     }
 
-    /**
-     * @return array Donne une liste d'erreur FCM ["message", "code"]
-     */
-    public function SubscribeToTopic(string $_topicName, array $_tokenClientList): array
-    {
-        $ch = curl_init($this->urlBaseTopic.":batchAdd");
+    // /**
+    //  * NE MARCHE PAS
+    //  * @return array Donne une liste d'erreur FCM ["message", "code"]
+    //  */
+    // public function SubscribeToTopic(string $_topicName, array $_tokenClientList): array
+    // {
+    //     $ch = curl_init($this->urlBaseTopic.":batchAdd");
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            "Authorization: Bearer ".$this->token,
-            "Content-Type: application/json",
-            "access_token_auth" => true
-        ]);
+    //     curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    //         "Authorization: Bearer ".$this->token,
+    //         "Content-Type: application/json",
+    //         "access_token_auth" => true
+    //     ]);
 
-        curl_setopt($ch, CURLOPT_POSTFIELDS, '{
-            "to": "/topic/"'.$_topicName.'",
-            "registration_tokens": "'.json_encode($_tokenClientList).'"
-        }');
+    //     curl_setopt($ch, CURLOPT_POSTFIELDS, '{
+    //         "to": "/topic/"'.$_topicName.'",
+    //         "registration_tokens": "'.json_encode($_tokenClientList).'"
+    //     }');
 
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "post");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER , true);
+    //     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "post");
+    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER , true);
 
-        $response = curl_exec($ch);
+    //     $response = curl_exec($ch);
 
-        $json = json_decode($response);
+    //     $json = json_decode($response);
 
-        if(isset($json->error))
-        {
-            $error = $json->error;
+    //     if(isset($json->error))
+    //     {
+    //         $error = $json->error;
 
-            return [
-                "message" => $error->message,
-                "code" => $error->code
-            ];
-        }
+    //         return [
+    //             "message" => $error->message,
+    //             "code" => $error->code
+    //         ];
+    //     }
 
-        return [];
-    }
+    //     return [];
+    // }
 
-    /**
-     * @return array Donne une liste d'erreur FCM ["message", "code"]
-     */
-    public function UnsubscribeToTopic(string $_topicName, array $_tokenClientList): array
-    {
-        $ch = curl_init($this->urlBaseTopic.":batchRemove");
+    // /**
+    //  * NE MARCHE PAS
+    //  * @return array Donne une liste d'erreur FCM ["message", "code"]
+    //  */
+    // public function UnsubscribeToTopic(string $_topicName, array $_tokenClientList): array
+    // {
+    //     $ch = curl_init($this->urlBaseTopic.":batchRemove");
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            "Authorization: Bearer ".$this->token,
-            "Content-Type: application/json",
-            "access_token_auth" => true
-        ]);
+    //     curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    //         "Authorization: Bearer ".$this->token,
+    //         "Content-Type: application/json",
+    //         "access_token_auth" => true
+    //     ]);
 
-        curl_setopt($ch, CURLOPT_POSTFIELDS, '{
-            "to": "/topic/"'.$_topicName.'",
-            "registration_tokens": "'.json_encode($_tokenClientList).'"
-        }');
+    //     curl_setopt($ch, CURLOPT_POSTFIELDS, '{
+    //         "to": "/topic/"'.$_topicName.'",
+    //         "registration_tokens": "'.json_encode($_tokenClientList).'"
+    //     }');
 
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "post");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER , true);
+    //     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "post");
+    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER , true);
 
-        $response = curl_exec($ch);
+    //     $response = curl_exec($ch);
 
-        $json = json_decode($response);
+    //     $json = json_decode($response);
 
-        if(isset($json->error))
-        {
-            $error = $json->error;
+    //     if(isset($json->error))
+    //     {
+    //         $error = $json->error;
 
-            return [
-                "message" => $error->message,
-                "code" => $error->code
-            ];
-        }
+    //         return [
+    //             "message" => $error->message,
+    //             "code" => $error->code
+    //         ];
+    //     }
 
-        return [];
-    }
+    //     return [];
+    // }
 
     /**
      * @return array Donne une liste d'erreur FCM ["message", "code"]

@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware([])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
@@ -44,6 +44,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::controller(FcmController::class)->prefix("fcm")->group(function()
     {
         Route::get("send/{token}", "Send");
+        Route::post("send-to-topic", "SendToTopic");
         Route::post("register-topic", "RegisterTopic");
         Route::delete("delete-topic/{tokenTopic}", "DeleteTopic");
     });

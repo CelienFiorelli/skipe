@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SendTopicRequest;
 use App\Http\Requests\TopicRequest;
 use App\Models\FcmTopic;
 use App\Service\FCM\FcmService;
@@ -14,6 +15,19 @@ class FcmController extends Controller
     public function Send(string $token)
     {
         $errorList = $this->fcmServ->Send([$token], "titre", "message");
+
+        return count($errorList) == 0 ? response()->noContent() : response(status: 400)->json($errorList);
+    }
+
+    public function SendToTopic(SendTopicRequest $_request)
+    {
+        $info = $_request->validated();
+
+        $errorList = $this->fcmServ->SendToTopic(
+            $info["topic_name"], 
+            $info["title"],
+            $info["message"]
+        );
 
         return count($errorList) == 0 ? response()->noContent() : response(status: 400)->json($errorList);
     }
