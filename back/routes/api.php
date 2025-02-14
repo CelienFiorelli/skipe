@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FcmController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\MessageController;
 use Illuminate\Http\Request;
@@ -38,6 +39,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post("add", "add");
         Route::post("add-member", "addMember");
         Route::delete("delete-member", "deleteMember");
+    });
+
+    Route::controller(FcmController::class)->prefix("fcm")->group(function()
+    {
+        Route::get("send/{token}", "Send");
+        Route::post("register-topic", "RegisterTopic");
+        Route::delete("delete-topic/{tokenTopic}", "DeleteTopic");
     });
 });
 

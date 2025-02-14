@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use App\Service\FCM\FcmService\FcmService;
+use App\Service\FCM\FcmService;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Contracts\Foundation\Application;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(FcmService::class, function()
         {
-            return new FcmService("skipe-2ba29", "privateKey.json");
+            return new FcmService("skipe-2ba29", Storage::path("privateKey.json"));
         });
     }
 
