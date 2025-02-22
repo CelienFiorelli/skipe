@@ -5,8 +5,8 @@ import { PiPlusCircleFill } from "react-icons/pi";
 import { GroupInfos, NameWithPopover } from "../../molecules";
 import { GroupType } from "../../../typings/GroupType";
 import "./ConversationsSidebar.css";
-import { requestPermission } from "../../../services/FirebaseService";
-import { saveToken } from "../../../services/messages";
+// import { requestPermission } from "../../../services/FirebaseService";
+// import { saveToken } from "../../../services/messages";
 
 interface ConversationsSidebarProps {
 	name: string;
@@ -30,13 +30,13 @@ const ConversationsSidebar: FC<ConversationsSidebarProps> = ({
 	onNewGroupSelected,
 }) => {
 
-	const enableNotif = () => {
-		requestPermission().then((token) => {
-			if (token) {
-				saveToken(token);
-			}
-		})
-	}
+	// const enableNotif = () => {
+	// 	requestPermission().then((token) => {
+	// 		if (token) {
+	// 			saveToken(token);
+	// 		}
+	// 	})
+	// }
 
 	return (
 		<div style={{ background: "white", borderRight: "1px black solid" }}>
@@ -62,14 +62,14 @@ const ConversationsSidebar: FC<ConversationsSidebarProps> = ({
 					/>
 					Créer un groupe
 				</Button>
-				<Button
+				{/* <Button
 					variant="contained"
 					color="info"
 					onClick={enableNotif}
 					sx={{ mt: 2 }}
 				>
 					Activer les notif
-				</Button>
+				</Button> */}
 			</Box>
 		</div>
 	);
