@@ -4,8 +4,8 @@ importScripts(
   "https://www.gstatic.com/firebasejs/11.3.1/firebase-messaging.js"
 );
 
-// Initialize the Firebase app in the service worker
-// "Default" Firebase configuration (prevents errors)
+// // Initialize the Firebase app in the service worker
+// // "Default" Firebase configuration (prevents errors)
 const firebaseConfig = {
     apiKey: "AIzaSyA2SjvLR_wsh_yNJOB-T5pN1YfZ273PHgQ",
     authDomain: "skipe-2ba29.firebaseapp.com",
@@ -17,15 +17,14 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-// Retrieve firebase messaging
+// // Retrieve firebase messaging
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-  // const notificationTitle = 'test';
-  const notificationOptions = {
-    icon: './skipe.webp',
-    image: './skipe.webp',
-  };
+  const notificationTitle = payload.notification.title;
+   const notificationOptions = {
+     body: payload.notification.body,
+   };
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+   self.registration.showNotification(notificationTitle, notificationOptions);
 });

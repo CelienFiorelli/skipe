@@ -6,6 +6,7 @@ import { GroupInfos, NameWithPopover } from "../../molecules";
 import { GroupType } from "../../../typings/GroupType";
 import "./ConversationsSidebar.css";
 import { requestPermission } from "../../../services/FirebaseService";
+import { saveToken } from "../../../services/messages";
 
 interface ConversationsSidebarProps {
 	name: string;
@@ -28,6 +29,15 @@ const ConversationsSidebar: FC<ConversationsSidebarProps> = ({
 	selectedGroup,
 	onNewGroupSelected,
 }) => {
+
+	const enableNotif = () => {
+		requestPermission().then((token) => {
+			if (token) {
+				saveToken(token);
+			}
+		})
+	}
+
 	return (
 		<div style={{ background: "white", borderRight: "1px black solid" }}>
 			<Box style={style} display="flex" flexDirection="column">
@@ -55,7 +65,7 @@ const ConversationsSidebar: FC<ConversationsSidebarProps> = ({
 				<Button
 					variant="contained"
 					color="info"
-					onClick={requestPermission}
+					onClick={enableNotif}
 					sx={{ mt: 2 }}
 				>
 					Activer les notif

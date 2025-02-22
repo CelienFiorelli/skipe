@@ -125,6 +125,7 @@ class FcmService
 
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "post");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER , true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         $response = curl_exec($ch);
 
@@ -171,6 +172,7 @@ class FcmService
 
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "post");
             curl_setopt($ch, CURLOPT_RETURNTRANSFER , true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
             $response = curl_exec($ch);
 

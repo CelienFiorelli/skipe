@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware([])->group(function () {
+Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
@@ -31,6 +31,8 @@ Route::middleware([])->group(function () {
         Route::put("{message}", "update");
         Route::delete("{message}", "destroy");
         Route::get("file", "fichier");
+
+        Route::post("save-token", "saveToken");
     });
 
     Route::controller(GroupController::class)->prefix("group")->group(function()

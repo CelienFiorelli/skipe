@@ -39,3 +39,12 @@ export const deleteMessage = async (messageId: number): Promise<boolean> => {
         throw new Error(error);
     }
 };
+
+export const saveToken = async (token: string): Promise<boolean> => {
+    try {
+        await axios.post('/message/save-token', { token });
+        return true;
+    } catch (error: any) {
+        throw new Error(error);
+    }
+};

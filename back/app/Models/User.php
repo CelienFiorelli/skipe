@@ -16,6 +16,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $name
  * @property string $email
  * @property string $password
+ * @property string $firebase_token
  * 
  * @property Message[] $messages
  */
@@ -38,6 +39,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function userGroups(): HasMany
+    {
+        return $this->hasMany(UserGroup::class);
+    }
 
     public function messages(): HasMany
     {
