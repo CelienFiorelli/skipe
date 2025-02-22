@@ -24,6 +24,13 @@ Application web, d'une mini messagerie instantanée.
 
 ## Techs
 
-- Laravel
-- React
+- Laravel (API)
+- React (Front)
 - MySQL
+
+## Problemes rencontrés
+
+- Lancer la commande `npm install --legacy-peer-deps` fait crash EC2 pendant 20min  
+=> build et push sur github pour pull sur EC2
+
+- 
