@@ -39,9 +39,9 @@ class MessageController extends Controller
         $path = $_request->query->getString("path");
 
         if($path === null)
-            return response("il me faut le chemin du fichier", 400);
+            return response("Il me faut le chemin du fichier", 400);
 
-        return Storage::download($path);
+        return Storage::response($path);
     }
 
     public function add(MessageRequest $_request): JsonResponse

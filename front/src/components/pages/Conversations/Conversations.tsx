@@ -31,9 +31,10 @@ const Conversations = () => {
 	const [groupCreationModaleError, setGroupCreationModaleError] = useState(false);
 
 	const sendMessage = async () => {
+		const file = fileInputRef.current?.files?.[0];
+		if ((!messageContent.replaceAll(" ", "") && !file) || !currentGroup) return;
 		setMessageLoading(true);
-		if (!messageContent.replaceAll(" ", "") || !currentGroup) return;
-        await createMessage(currentGroup.id, messageContent);
+        await createMessage(currentGroup.id, messageContent, file);
         setMessageContent("");
         if (messageInputRef.current) {
             messageInputRef.current.focus();
@@ -47,11 +48,13 @@ const Conversations = () => {
 			Echo.leave(`group.${currentGroup.id}`);
 		}
 		setMessages([]);
+		setMessageLoading(true);
 		setCurrentGroup(group);
 		if (!id || parseInt(id) !== group.id) {
 			navigate(`/conversations/${group.id}`);
 		}
 		const messagesData = await getMessages(group.id);
+		setMessageLoading(false);
 		setMessages(messagesData.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()) ?? []);
 		
 		Echo.private(`group.${group.id}`)
@@ -122,7 +125,7 @@ const Conversations = () => {
 
 			<Box flexGrow='1' display='flex' flexDirection='column'>
 				<Box flexGrow='1'>
-					{loading ?
+					{loading || messageLoading ?
 						(<Box display='flex' justifyContent='center' alignItems='center' height='100%'><CircularProgress /></Box>)
 						:
 						(<>{groups.length && currentGroup ?
