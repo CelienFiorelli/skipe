@@ -8,12 +8,12 @@ const token = Cookies.get('auth_token');
 window.Echo = new Echo({
     broadcaster: 'reverb',
     key: 'zybi41fmn5qeztpkn6cf',
-    wsHost: 'localhost',
+    wsHost: config.HOST,
     wsPort: 9000,
     wssPort: 9000,
     forceTLS: false,
     enabledTransports: ['ws', 'wss'],
-    authEndpoint: `http://${config.API_URL}broadcasting/auth`,
+    authEndpoint: `${config.API_URL}broadcasting/auth`,
     auth: {
         headers: {
             Authorization: `Bearer ${token}`,
