@@ -19,8 +19,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class MessageController extends Controller
 {
-    public function __construct(private FcmService $fcmServ) { }
-
     public function list(int $groupId)
     {
         if($groupId <= 0)
