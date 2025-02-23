@@ -71,11 +71,11 @@ class MessageController extends Controller
         $message->load('user:id,pseudo');
 
         broadcast(new MessageCreateEvent($messageRequest["group_id"], $message));
-        $tokens = User::query()->whereHas('userGroups', function ($q) use ($info) {
-            $q->where('group_id', $info['group_id']);
-        })->pluck('firebase_token');
-        dd($tokens);
-        $errorList = $this->fcmServ->Send([$token], "titre", "message");
+        // $tokens = User::query()->whereHas('userGroups', function ($q) use ($info) {
+        //     $q->where('group_id', $info['group_id']);
+        // })->pluck('firebase_token');
+        // dd($tokens);
+        // $errorList = $this->fcmServ->Send([$token], "titre", "message");
         
         return response()->json($message);
     }
